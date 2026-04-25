@@ -1,18 +1,20 @@
 import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
+import { fileURLToPath } from 'url';
 import repositories from '../repositories/index.js';
 import HttpStatus from 'http-status';
 const { mediaRepository } = repositories;
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         const { mediaType, mediaFor } = req.params;
-        const dirPath = path.join(__dirname, '../../public/uploads/' + mediaType + '/' + mediaFor);
+        const dirPath = path.join(__dirname, '../../public/uploads', mediaType, mediaFor);
         if (!fs.existsSync(dirPath)) {
-            fs.mkdirSync(dirPath, { recursive: true }, (err) => {
-                throw Error(err);
-            });
+            fs.mkdirSync(dirPath, { recursive: true });
         }
         cb(null, dirPath);
     },
