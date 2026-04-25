@@ -7,7 +7,7 @@ const router = Router();
 const register = (app) => {
     app.use(router);
     router.use('/', [
-        // media,
+        media,
         user,
     ])
     app.use((error, req, res, next) => {

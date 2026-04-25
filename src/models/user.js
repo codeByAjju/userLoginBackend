@@ -1,16 +1,16 @@
 export default (sequelize, DataTypes) => {
     const User = sequelize.define('user', {
-        name: {
+        firstName: {
+            type: DataTypes.STRING,
+            allowNull: false
+        },
+        lastName: {
             type: DataTypes.STRING,
             allowNull: false
         },
         email: {
             type: DataTypes.STRING,
             allowNull: false,
-            unique: {
-              msg: 'Email already taken',
-              fields: ['email'],
-            },
             validate: {
               notEmpty: {
                 msg: 'Email is required',
@@ -25,13 +25,6 @@ export default (sequelize, DataTypes) => {
         password: {
             type: DataTypes.STRING,
             allowNull: false,
-        },
-        contact: {
-            type: DataTypes.STRING,
-            allowNull: true,
-            validate: {
-                isNumeric: true
-            }
         },
         role: {
             type: DataTypes.STRING,

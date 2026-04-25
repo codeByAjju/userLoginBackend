@@ -8,7 +8,7 @@ export default {
         try {
             const { files, params } = req;
             const file = files[0];
-            var basePath = `public\\uploads\\${params.mediaType}\\${params.mediaFor}\\${file.filename}`;
+            const basePath = `public/uploads/${params.mediaType}/${params.mediaFor}/${file.filename}`;
             const result = await media.create({
                 name: file.filename,
                 mediaType: params.mediaType,

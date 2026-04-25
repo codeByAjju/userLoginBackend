@@ -20,6 +20,15 @@ export default {
   async signup(req) {
     try {
       const bodyData = req.body;
+      
+      // Check if email already exists
+      const existingUser = await user.findOne({ where: { email: bodyData.email } });
+      if (existingUser) {
+        const error = new Error('Email already registered. Please use a different email or try logging in.');
+        error.status = 400;
+        throw error;
+      }
+      
       const hashPassword = await this.createHashPassword(bodyData.password);
       bodyData.password = hashPassword;
       bodyData.role = 'user'
@@ -29,7 +38,7 @@ export default {
       return false;
 
     } catch (error) {
-      throw Error(error);
+      throw error;
     }
   },
   async signin(request) {
