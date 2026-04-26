@@ -28,9 +28,18 @@ export default {
     try {
       const data = await userRepository.signin(req);
       if (data?.token) {
-        return res.status(httpStatus.OK).json({ data, message: 'SIGNIN SUCCESSS......',status: 200 });
+        return res.status(httpStatus.OK).json({
+          data,
+          message: 'Signin successful',
+          status: true
+        });
       }
-      return res.status(httpStatus.BAD_REQUEST).json(data || { message: 'SOMETHING WENT WRONG.....',status: 400 });
+
+      // Handle authentication failure
+      return res.status(httpStatus.UNAUTHORIZED).json({
+        message: data?.msg || 'Invalid email or password',
+        status: false
+      });
     } catch (error) {
       next(error)
     }

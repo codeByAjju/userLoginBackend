@@ -52,9 +52,13 @@ export default {
         userData.token = token;
         user.update({ token: token }, { where: { id: havingEmail.id } });
         return { token, ...userData };
+      } else {
+        // Password doesn't match
+        return { status: false, msg: "Invalid password" };
       }
     }
-    return { status: false, msg: "No User Found" };
+    // User not found
+    return { status: false, msg: "User not found with this email" };
   },
   async compareUserPassword(password, hashPassword) {
     let isPasswordMatch = '';
