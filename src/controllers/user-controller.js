@@ -2,7 +2,7 @@ import models from '../models/index.js';
 import services from '../services/jwt.js';
 import config from '../config/index.js';
 import repositories from '../repositories/index.js';
-import httpStatus from 'http-status';
+import httpStatus, { status } from 'http-status';
 import model from '../models/index.js';
 import bcrypt from 'bcryptjs';
 
@@ -28,9 +28,9 @@ export default {
     try {
       const data = await userRepository.signin(req);
       if (data?.token) {
-        return res.status(httpStatus.OK).json({ data, message: 'SIGNIN SUCCESSS......' });
+        return res.status(httpStatus.OK).json({ data, message: 'SIGNIN SUCCESSS......',status: 200 });
       }
-      return res.status(httpStatus.BAD_REQUEST).json(data || { message: 'SOMETHING WENT WRONG.....' });
+      return res.status(httpStatus.BAD_REQUEST).json(data || { message: 'SOMETHING WENT WRONG.....',status: 400 });
     } catch (error) {
       next(error)
     }
