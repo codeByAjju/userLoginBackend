@@ -27,50 +27,23 @@ const userLoginUpdateSchema= Joi.object({
   .max(10)
 });
 
-const userProfileUpdateSchema = Joi.object({
-  firstName: Joi.string(),
+const userSignupSchema = Joi.object({
+  firstName: Joi.string()
+    .min(2)
+    .max(50)
+    .required(),
   lastName: Joi.string()
-  .min(3)
-  .max(20)
-  .pattern(/^\D*$/)
-  .messages({
-    'any.required': 'FIRSTNAME_REQUIRED',
-    'string.empty': 'FIRSTNAME_REQUIRED',
-    'string.min': 'FIRSTNAME_MIN_VALIDATION',
-    'string.max': 'FIRSTNAME_MAX_VALIDATION',
-    'string.pattern.base': 'FIRSTNAME_NUMERIC_NOT_ALLOWED',
-  })
-  .required(),
-  lastName: Joi.string()
-  .min(3)
-  .max(20)
-  .pattern(/^\D*$/)
-  .messages({
-    'any.required': 'LASTNAME_REQUIRED',
-    'string.empty': 'LASTNAME_REQUIRED',
-    'string.min': 'LASTNAME_MIN_VALIDATION',
-    'string.max': 'LASTNAME_MAX_VALIDATION',
-    'string.pattern.base': 'LASTNAME_NUMERIC_NOT_ALLOWED',
-  })
-  .required(),
+    .min(2)
+    .max(50)
+    .required(),
   email: Joi.string()
-  .email({ minDomainSegments: 2, tlds: { allow: false } })
-  .min(6)
-  .max(50)
-  .pattern(/^[^\s]+$/)
-  .messages({
-    'any.required': 'EMAIL_REQUIRED',
-    'string.empty': 'EMAIL_REQUIRED',
-    'string.email': 'VALID_EMAIL_ALLOWED',
-    'string.min': 'EMAIL_MIN_VALIDATION',
-    'string.max': 'EMAIL_MAX_VALIDATION',
-    'string.pattern.base': 'EMAIL_FORMAT_INVALID',
-    'string.pattern': 'SPACES_NOT_ALLOWED_IN_EMAIL',
-  })
-  .required(),  
-  password: Joi.string()  
+    .email({ minDomainSegments: 2, tlds: { allow: false } })
     .min(6)
-    .label('Password')
+    .max(50)
+    .pattern(/^[^\s]+$/)
+    .required(),
+  password: Joi.string()
+    .min(6)
     .required(),
   address: Joi.string()
     .min(3)
@@ -78,10 +51,34 @@ const userProfileUpdateSchema = Joi.object({
     .optional()
     .allow('', null),
   profileImageURL: Joi.string().uri().optional().allow('', null),
-  contact : Joi.string()
-  .min(10)
-  .max(10)
-  .optional(),
+  contact: Joi.string()
+    .min(10)
+    .max(10)
+    .optional(),
+});
+
+const userProfileUpdateSchema = Joi.object({
+  id: Joi.number().integer().optional(),
+  email: Joi.string()
+    .email({ minDomainSegments: 2, tlds: { allow: false } })
+    .min(6)
+    .max(50)
+    .pattern(/^[^\s]+$/)
+    .optional(),
+  firstName: Joi.string()
+    .min(2)
+    .max(50)
+    .optional(),
+  lastName: Joi.string()
+    .min(2)
+    .max(50)
+    .optional(),
+  address: Joi.string()
+    .min(3)
+    .max(100)
+    .optional()
+    .allow('', null),
+  profileImageURL: Joi.string().uri().optional().allow('', null),
 });
 
 const userOrderSchema = Joi.object({
@@ -134,7 +131,8 @@ const userOrderSchema = Joi.object({
 });
 
 export default {
+  userSignupSchema,
   userProfileUpdateSchema,
   userLoginUpdateSchema,
-  userOrderSchema
+  userOrderSchema,
 };

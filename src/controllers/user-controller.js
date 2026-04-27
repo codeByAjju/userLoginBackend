@@ -48,12 +48,19 @@ export default {
     async userUpdateProfile(request, response, next) {
         try {
             const result = await userRepository.userUpdateProfile(request);
-            if (result.status){
-                return response.status(httpStatus.OK).json(result.userData.dataValues);
+            if (result.status) {
+                return response.status(httpStatus.OK).json({
+                    status: true,
+                    message: result.msg || 'Profile updated successfully',
+                    data: result.userData,
+                });
             }
-            return response.status(httpStatus.BAD_REQUEST).json(result || { message: 'SOMETHING WENT WRONG.....' });
+            return response.status(httpStatus.BAD_REQUEST).json({
+                status: false,
+                message: result.msg || 'Profile update failed',
+            });
         } catch (error) {
-            next(error)
+            next(error);
         }
     },
 }

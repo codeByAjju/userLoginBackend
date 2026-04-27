@@ -69,17 +69,30 @@ export default {
   },
 
   async userUpdateProfile(request) {
-    const userobj = { ...request.body };
-    const userB = await user.scope('customers').findOne({ where: { id: userobj?.bodyData?.id } });
-    if (!userB) {
-      return { status: false, msg: "Invalid Request" }
+    try {
+      const updateData = request.body || {};
+      const userId = updateData.id || updateData.userId;
+      const lookup = userId ? { id: userId } : { email: updateData.email };
+
+      const userRecord = await user.findOne({ where: lookup });
+      if (!userRecord) {
+        return { status: false, msg: "User not found" };
+      }
+
+      const allowedFields = ['firstName', 'lastName', 'address', 'profileImageURL'];
+      const payload = {};
+      allowedFields.forEach((field) => {
+        if (updateData[field] !== undefined && updateData[field] !== null) {
+          payload[field] = updateData[field];
+        }
+      });
+
+      await userRecord.update(payload);
+      const { password, token, passwordResetToken, ...userData } = userRecord.toJSON();
+      return { userData, status: true, msg: "Profile updated successfully" };
+    } catch (error) {
+      console.error('Repository profile update error:', error);
+      return { status: false, msg: "Failed to update profile" };
     }
-    userB.name = userobj.bodyData.name ? userobj.bodyData.name : user.name;
-    userB.contact = userobj.bodyData.contact ? userobj.bodyData.contact : user.contact;
-    userB.email = userobj.bodyData.email ? userobj.bodyData.email : user.email;
-    userB.profileImageURL = userobj.bodyData.profileImageURL ? userobj.bodyData.profileImageURL : user.profileImageURL;
-    await userB.save();
-    const { ...userData } = userB;
-    return { userData, status: true, msg: "Profile updated succesfully" }
   },
 }
